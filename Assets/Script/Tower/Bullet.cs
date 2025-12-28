@@ -3,10 +3,10 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public float speed = 10f;
-    public float damage = 2f;
+    public float damage = 1f;
     public float lifeTime = 3f;
 
-    private Transform target;
+    Transform target;
 
     public void SetTarget(Transform t) => target = t;
 
@@ -14,11 +14,7 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-        if (target == null)
-        {
-            Destroy(gameObject);
-            return;
-        }
+        if (target == null) { Destroy(gameObject); return; }
 
         Vector3 dir = (target.position - transform.position).normalized;
         transform.position += dir * speed * Time.deltaTime;
@@ -26,10 +22,12 @@ public class Bullet : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        // IMPORTANT: if collider is on a child, this still finds the parent health
         if (!other.CompareTag("Enemy")) return;
 
-        var hp = other.GetComponent<EnemyHealth>();
-        if (hp != null) hp.TakeDamage(damage);
+        EnemyHealth hp = other.GetComponentInParent<EnemyHealth>();
+        if (hp != null)
+            hp.TakeDamage(damage);
 
         Destroy(gameObject);
     }

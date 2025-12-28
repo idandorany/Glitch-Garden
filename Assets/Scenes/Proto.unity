@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tower
   range: 3
-  fireRate: 1
+  fireRate: 3
   bulletPrefab: {fileID: 3921189398884882023, guid: c304c8639be48824d86ecdc7ba51dbe9, type: 3}
   firePoint: {fileID: 807305396}
 --- !u!58 &67073536
@@ -297,8 +297,8 @@ MonoBehaviour:
   waypointsParent: {fileID: 1560494424}
   waves:
   - enemyPrefab: {fileID: 1027989462392954556, guid: ed96a1dd60ad1ae41870c0d84ce644fd, type: 3}
-    count: 1
-    spawnInterval: 1
+    count: 3
+    spawnInterval: 3
   timeBetweenWaves: 3
 --- !u!4 &176276006
 Transform:
