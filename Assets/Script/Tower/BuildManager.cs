@@ -2,32 +2,43 @@ using UnityEngine;
 
 public class BuildManager : MonoBehaviour
 {
-    public static BuildManager Instance;
-
     public GameObject towerPrefab;
-    public bool isBuildMode = false;
+    public bool buildMode;
+
+    Camera cam;
 
     void Awake()
     {
-        Instance = this;
+        cam = Camera.main;
+        if (cam == null) Debug.LogError("No Main Camera found. Tag your camera as MainCamera.");
     }
 
-    // Called by UI Button
+    // Hook this to your button OnClick
     public void SelectTower()
     {
-        isBuildMode = true;
-        Debug.Log("Build mode ON");
+        buildMode = true;
+        Debug.Log("Build mode ON - click on ground to place");
     }
 
-    public void BuildOnTile(Tile tile)
+    void Update()
     {
-        if (!isBuildMode) return;
-        if (tile.hasTower) return;
+        if (!buildMode) return;
+        if (!Input.GetMouseButtonDown(0)) return;
+        if (cam == null) return;
 
-        Instantiate(towerPrefab, tile.transform.position, Quaternion.identity);
-        tile.hasTower = true;
+        // Don’t place if clicking UI
+        if (UnityEngine.EventSystems.EventSystem.current != null &&
+            UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+            return;
 
-        isBuildMode = false; // turn off after building once
-        Debug.Log("Tower built, build mode OFF");
+        Vector2 world = cam.ScreenToWorldPoint(Input.mousePosition);
+        RaycastHit2D hit = Physics2D.Raycast(world, Vector2.zero);
+
+        if (hit.collider != null && hit.collider.gameObject.name == "Ground")
+        {
+            Instantiate(towerPrefab, hit.point, Quaternion.identity);
+            buildMode = false;
+            Debug.Log("Tower placed!");
+        }
     }
 }
