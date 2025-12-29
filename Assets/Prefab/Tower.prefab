@@ -142,7 +142,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tower
   range: 3
-  fireRate: 3
+  fireRate: 2
   bulletPrefab: {fileID: 3921189398884882023, guid: c304c8639be48824d86ecdc7ba51dbe9, type: 3}
   firePoint: {fileID: 5777301140925176956}
 --- !u!1 &6926933732985702770
