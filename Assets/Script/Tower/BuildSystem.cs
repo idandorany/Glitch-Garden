@@ -1,6 +1,6 @@
-using UnityEngine;
+/*using UnityEngine;
 
-public class BuildSystem : MonoBehaviour
+ public class BuildSystem : MonoBehaviour
 {
     public TowerFactory factory;
     public MergeSystem mergeSystem;
@@ -40,4 +40,4 @@ public class BuildSystem : MonoBehaviour
         if (!merged)
             Debug.Log("Cannot merge these towers.");
     }
-}
+} */
