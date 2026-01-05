@@ -2,12 +2,22 @@ using UnityEngine;
 
 public class Tower : MonoBehaviour
 {
+    [Header("Merge Data")]
+    public TowerType towerType = TowerType.Warrior;
+    public int stars = 1;
+
+    [Header("Combat")]
     public float range = 3f;
-    public float fireRate = 1f; 
+    public float fireRate = 1f;
     public GameObject bulletPrefab;
     public Transform firePoint;
 
     private float nextShotTime = 0f;
+
+    void Start()
+    {
+        ApplyStatsByStars();
+    }
 
     void Update()
     {
@@ -18,6 +28,18 @@ public class Tower : MonoBehaviour
 
         Shoot(target);
         nextShotTime = Time.time + (1f / fireRate);
+    }
+
+    public void SetStars(int newStars)
+    {
+        stars = Mathf.Max(1, newStars);
+        ApplyStatsByStars();
+    }
+
+    void ApplyStatsByStars()
+    {
+        range = 3f + (stars - 1) * 0.5f;
+        fireRate = 1f + (stars - 1) * 0.25f;
     }
 
     Transform FindClosestEnemy()
