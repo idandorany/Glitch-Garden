@@ -1,14 +1,24 @@
+using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class DragManager : MonoBehaviour
 {
+    // Events (optional subscribers)
+    public event Action<int> DragStarted;                 // slotIndex
+    public event Action<Vector2> DragMoved;               // screenPos
+    public event Action<int, Vector2, bool> DragEnded;    // slotIndex, screenPos, placedSuccess
+
     [Header("References")]
-    [SerializeField] private Canvas canvas; // Screen Space - Overlay canvas
+    [SerializeField] private Canvas canvas;               // Screen Space - Overlay
     [SerializeField] private InventoryManager inventory;
     [SerializeField] private PlacementManager placement;
-    [SerializeField] private Image dragGhost; // Canvas/DragGhost
+
+    [Header("Slot Icons (5) - drag Slot_0/Icon ... Slot_4/Icon here")]
+    [SerializeField] private RectTransform[] slotIconRects = new RectTransform[5];
+
+    [Header("Drag Ghost (Canvas/DragGhost Image)")]
+    [SerializeField] private Image dragGhost;
 
     private bool isDragging;
     private int draggingSlotIndex = -1;
@@ -16,28 +26,38 @@ public class DragManager : MonoBehaviour
     private void Start()
     {
         if (dragGhost != null)
+        {
+            dragGhost.raycastTarget = false;
             dragGhost.gameObject.SetActive(false);
+        }
     }
 
     private void Update()
     {
-        HandleStartDrag();
-        HandleDragMove();
-        HandleEndDrag();
+        if (!isDragging)
+        {
+            if (Input.GetMouseButtonDown(0))
+                TryBeginDrag(Input.mousePosition);
+
+            return;
+        }
+
+        // dragging
+        UpdateGhostPosition(Input.mousePosition);
+        DragMoved?.Invoke(Input.mousePosition);
+
+        if (Input.GetMouseButtonUp(0))
+            EndDrag(Input.mousePosition);
     }
 
-    public void HandleStartDrag()
+    private void TryBeginDrag(Vector2 screenPos)
     {
-        if (isDragging) return;
-        if (!Input.GetMouseButtonDown(0)) return;
-
-        int slotIndex = GetSlotIndexUnderMouse();
+        int slotIndex = FindSlotIndexAtScreenPos(screenPos);
         if (slotIndex < 0) return;
 
         if (!inventory.HasItem(slotIndex))
             return;
 
-        // Begin drag
         isDragging = true;
         draggingSlotIndex = slotIndex;
 
@@ -45,85 +65,59 @@ public class DragManager : MonoBehaviour
         {
             dragGhost.sprite = inventory.GetIcon(slotIndex);
             dragGhost.gameObject.SetActive(true);
-            dragGhost.raycastTarget = false;
-            UpdateGhostPosition();
+            UpdateGhostPosition(screenPos);
         }
+
+        DragStarted?.Invoke(slotIndex);
     }
 
-    private void HandleDragMove()
+    private void EndDrag(Vector2 screenPos)
     {
-        if (!isDragging) return;
-        UpdateGhostPosition();
-    }
-
-    private void HandleEndDrag()
-    {
-        if (!isDragging) return;
-        if (!Input.GetMouseButtonUp(0)) return;
-
         bool placed = false;
 
         GameObject prefab = inventory.GetPrefab(draggingSlotIndex);
         if (prefab != null)
-        {
-            placed = placement.TryPlace(prefab, Input.mousePosition);
-        }
+            placed = placement.TryPlace(prefab, screenPos);
 
         if (placed)
-        {
             inventory.Consume(draggingSlotIndex);
-        }
 
-        // End drag
         isDragging = false;
+        int endedSlot = draggingSlotIndex;
         draggingSlotIndex = -1;
 
         if (dragGhost != null)
             dragGhost.gameObject.SetActive(false);
+
+        DragEnded?.Invoke(endedSlot, screenPos, placed);
     }
 
-    private void UpdateGhostPosition()
+    private void UpdateGhostPosition(Vector2 screenPos)
     {
-        if (dragGhost == null) return;
+        if (dragGhost == null || canvas == null) return;
 
         RectTransform ghostRect = dragGhost.rectTransform;
-        Vector2 anchoredPos;
 
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             (RectTransform)canvas.transform,
-            Input.mousePosition,
+            screenPos,
             null,
-            out anchoredPos
+            out Vector2 anchoredPos
         );
 
         ghostRect.anchoredPosition = anchoredPos;
     }
 
-    private int GetSlotIndexUnderMouse()
+    private int FindSlotIndexAtScreenPos(Vector2 screenPos)
     {
-        // Raycast UI to find Icon under the mouse
-        PointerEventData ped = new PointerEventData(EventSystem.current);
-        ped.position = Input.mousePosition;
-
-        var results = new System.Collections.Generic.List<RaycastResult>();
-        EventSystem.current.RaycastAll(ped, results);
-
-        foreach (var r in results)
+        // Only checks up to 5 rects (very cheap)
+        for (int i = 0; i < slotIconRects.Length; i++)
         {
-            // Expecting object names like: Slot_0/Icon
-            // We'll search parents for Slot_#
-            Transform t = r.gameObject.transform;
+            RectTransform rt = slotIconRects[i];
+            if (rt == null) continue;
 
-            while (t != null)
-            {
-                if (t.name.StartsWith("Slot_"))
-                {
-                    string idxStr = t.name.Replace("Slot_", "");
-                    if (int.TryParse(idxStr, out int idx))
-                        return idx;
-                }
-                t = t.parent;
-            }
+            if (RectTransformUtility.RectangleContainsScreenPoint(rt, screenPos, null))
+                return i;
         }
 
         return -1;
