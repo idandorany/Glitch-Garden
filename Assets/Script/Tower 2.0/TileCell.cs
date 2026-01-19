@@ -2,21 +2,34 @@ using UnityEngine;
 
 public class TileCell : MonoBehaviour
 {
-    [field: SerializeField] public Vector2Int GridPos { get; private set; }
-
-    public bool IsOccupied => occupant != null;
-    private Transform occupant;
+    public Vector2Int GridPos { get; private set; }
+    public bool IsOccupied { get; private set; }
 
     public Vector3 CenterWorld => transform.position;
 
-    public void Init(Vector2Int pos) => GridPos = pos;
+    public void Init(Vector2Int gridPos)
+    {
+        GridPos = gridPos;
+        IsOccupied = false;
+    }
 
     public bool TryOccupy(Transform unit)
     {
-        if (occupant != null) return false;
-        occupant = unit;
+        if (IsOccupied) return false;
+
+        IsOccupied = true;
+        unit.position = transform.position;
         return true;
     }
 
-    public void Clear() => occupant = null;
+    public void Clear()
+    {
+        IsOccupied = false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawSphere(transform.position, 0.05f);
+    }
 }

@@ -616,6 +616,7 @@ GameObject:
   m_Component:
   - component: {fileID: 704962291}
   - component: {fileID: 704962290}
+  - component: {fileID: 704962292}
   m_Layer: 0
   m_Name: BoardManager
   m_TagString: Untagged
@@ -637,9 +638,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BoardManager
   width: 4
   height: 3
+  tilePrefab: {fileID: 2204104554623674567, guid: 67f3cfed66efed24b9559726ba780c7c, type: 3}
   spacing: {x: 2, y: 2}
   origin: {x: -3, y: 2}
-  tilePrefab: {fileID: 2204104554623674567, guid: 67f3cfed66efed24b9559726ba780c7c, type: 3}
 --- !u!4 &704962291
 Transform:
   m_ObjectHideFlags: 0
@@ -655,6 +656,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &704962292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 704962289}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd3bba6e445b484caf5013f4aa10a82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
+  board: {fileID: 704962290}
+  enemyPrefab: {fileID: 9085674948743521744, guid: ed96a1dd60ad1ae41870c0d84ce644fd, type: 3}
+  spawnXOffset: 1.5
 --- !u!1 &789192382
 GameObject:
   m_ObjectHideFlags: 0

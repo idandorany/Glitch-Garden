@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
+
+/*
 public class EnemySpawner : MonoBehaviour
 {
     [System.Serializable]
@@ -88,5 +90,43 @@ public class EnemySpawner : MonoBehaviour
         {
             Debug.LogWarning("Spawned enemy has no EnemyPathFollower component.");
         }
+    }
+}
+
+*/
+
+
+public class EnemySpawner : MonoBehaviour
+{
+    [Header("References")]
+    [SerializeField] private BoardManager board;
+
+    [Header("Enemy Prefabs")]
+    [SerializeField] private Enemy enemyPrefab;
+
+    [Header("Spawn Settings")]
+    [SerializeField] private float spawnXOffset = 1.5f;
+
+    // Simple test spawn (can be called from Inspector button or Start)
+    public void SpawnEnemyInRow(int row)
+    {
+        if (board == null || enemyPrefab == null)
+        {
+            Debug.LogWarning("EnemySpawner missing references");
+            return;
+        }
+
+        float y = board.transform.position.y
+                  - row * board.GetSpacing().y
+                  + board.GetOrigin().y;
+
+        float x = board.GetOrigin().x
+                  + (board.GetWidth() * board.GetSpacing().x)
+                  + spawnXOffset;
+
+        Vector3 spawnPos = new Vector3(x, y, 0f);
+
+        Enemy enemy = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+        enemy.SetRow(row);
     }
 }
