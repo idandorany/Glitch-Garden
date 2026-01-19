@@ -6,9 +6,9 @@ public class InventoryManager : MonoBehaviour
     [System.Serializable]
     public class Slot
     {
-        public Image iconImage;          // UI Image: Slot_X/Icon
-        public GameObject unitPrefab;    // what will spawn on the grid
-        public Sprite iconSprite;        // UI icon sprite
+        public Image iconImage;
+        public GameObject unitPrefab;
+        public Sprite iconSprite;
     }
 
     [Header("Fixed 5 slots")]
@@ -42,10 +42,8 @@ public class InventoryManager : MonoBehaviour
     public void Consume(int slotIndex)
     {
         if (!IsValid(slotIndex)) return;
-
         slots[slotIndex].unitPrefab = null;
         slots[slotIndex].iconSprite = null;
-
         RefreshUI();
     }
 
@@ -72,7 +70,6 @@ public class InventoryManager : MonoBehaviour
                 continue;
 
             bool hasItem = slots[i].unitPrefab != null;
-
             slots[i].iconImage.enabled = hasItem;
             slots[i].iconImage.sprite = hasItem ? slots[i].iconSprite : null;
         }

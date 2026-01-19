@@ -357,12 +357,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 233774506}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 231.36952, y: 64.58349, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -55.316338, y: 200.05994, z: 0}
+  m_LocalScale: {x: 4.1635895, y: 4.1635895, z: 4.1635895}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1184421339}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &233774508
 MonoBehaviour:
@@ -377,8 +377,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuyButton
   inventory: {fileID: 1143512362}
-  unitPrefab: {fileID: 4539887198496878483, guid: b58b9fa71a92e534b89d52d1b7dc4c9c, type: 3}
-  unitIcon: {fileID: 7482667652216324306, guid: 4e4583795a806f441a66c3afd9c29fb4, type: 3}
+  buyableUnits:
+  - prefab: {fileID: 4539887198496878483, guid: b58b9fa71a92e534b89d52d1b7dc4c9c, type: 3}
+    icon: {fileID: 7482667652216324306, guid: 4e4583795a806f441a66c3afd9c29fb4, type: 3}
+  - prefab: {fileID: 1771463465841459968, guid: b956f25073918934ea8e87283e8800ba, type: 3}
+    icon: {fileID: -2413806693520163455, guid: 25fb7e4629545bb409ad0c106e9cbbb6, type: 3}
+  repeatDecreaserActive: 0
+  rollsBeforeDecrease: 2
+  chanceReduction: 0.5
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1318,6 +1324,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 790405013}
+  - {fileID: 233774507}
   m_Father: {fileID: 1581335520}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -2128,4 +2135,3 @@ SceneRoots:
   - {fileID: 1581335520}
   - {fileID: 189214009}
   - {fileID: 1469348676}
-  - {fileID: 233774507}
