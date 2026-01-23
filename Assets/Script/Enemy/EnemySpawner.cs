@@ -7,6 +7,7 @@ public class EnemySpawner : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform tileCell;
+    public Transform TileCell { get => tileCell; set => tileCell = value; }
 
     [Header("Enemy Prefabs")]
     [SerializeField] private Enemy enemyPrefab;

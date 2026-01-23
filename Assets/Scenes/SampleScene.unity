@@ -397,7 +397,6 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
-  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -523,22 +522,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &519420033
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 519420028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cd3bba6e445b484caf5013f4aa10a82, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  tileCells: []
-  enemyPrefab: {fileID: 9085674948743521744, guid: ed96a1dd60ad1ae41870c0d84ce644fd, type: 3}
-  spawnedEnemies: []
-  spawnXOffset: 1.5
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -653,11 +636,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92982bea80309d54d9dafcde9556a647, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoardManager
-  width: 6
-  height: 3
-  tilePrefab: {fileID: 2204104554623674567, guid: 67f3cfed66efed24b9559726ba780c7c, type: 3}
-  spacing: {x: 2, y: 2}
-  origin: {x: -5, y: 2}
+  lanePrefab: {fileID: 0}
+  laneCount: 0
+  boardOrigin: {fileID: 0}
+  laneSpacing: 0
 --- !u!4 &704962291
 Transform:
   m_ObjectHideFlags: 0
@@ -685,7 +667,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd3bba6e445b484caf5013f4aa10a82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  tileCells: []
+  tileCell: {fileID: 0}
   enemyPrefab: {fileID: 9085674948743521744, guid: ed96a1dd60ad1ae41870c0d84ce644fd, type: 3}
   spawnedEnemies: []
   spawnXOffset: 1.5
