@@ -12,7 +12,7 @@ public class DragManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private Canvas canvas;               // Screen Space - Overlay
     [SerializeField] private InventoryManager inventory;
-    [SerializeField] private PlacementManager placement;
+    [SerializeField] private MergeManager merge;
 
     [Header("Slot Icons (5) - drag Slot_0/Icon ... Slot_4/Icon here")]
     [SerializeField] private RectTransform[] slotIconRects = new RectTransform[5];
@@ -77,7 +77,7 @@ public class DragManager : MonoBehaviour
 
         GameObject prefab = inventory.GetPrefab(draggingSlotIndex);
         if (prefab != null)
-            placed = placement.TryPlace(prefab, screenPos);
+            placed = merge.TryPlace(prefab, screenPos);
 
         if (placed)
             inventory.Consume(draggingSlotIndex);
