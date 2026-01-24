@@ -7,40 +7,22 @@ public class Lane : MonoBehaviour
     [SerializeField] private Transform tilesRoot;
 
     private TileCell[] tiles;
-    private TileCell firstTile;
-
     public TileCell[] Tiles => tiles;
-    public TileCell FirstTile => firstTile;
-
-    private void Awake()
-    {
-        Initialize();
-    }
 
     public void Initialize()
     {
-        if (tilesRoot == null)
-        {
-            Debug.LogError($"{name}: tilesRoot is not assigned.");
-            return;
-        }
-
         tiles = tilesRoot.GetComponentsInChildren<TileCell>(includeInactive: true);
 
         if (tiles == null || tiles.Length == 0)
         {
-            Debug.LogError($"{name}: No TileCell found under tilesRoot.");
+            Debug.LogError($"{name}: No TileCell found under TileRoot.");
             return;
         }
-
-        firstTile = tiles[0];
 
         if (spawner == null)
         {
-            Debug.LogError($"{name}: spawner is not assigned.");
+            Debug.LogError($"{name}: Spawner reference missing.");
             return;
         }
-
-        spawner.TileCell = firstTile.transform;
     }
 }

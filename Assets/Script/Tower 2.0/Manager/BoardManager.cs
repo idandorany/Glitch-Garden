@@ -18,9 +18,12 @@ public class BoardManager : MonoBehaviour
     private void GenerateLanes()
     {
         Vector3 currentLaneSpawnPos = boardOrigin.position;
+
         for (int i = 0; i < laneCount; i++)
         {
-            Instantiate(lanePrefab, currentLaneSpawnPos, Quaternion.identity, boardOrigin);
+            Lane lane = Instantiate(lanePrefab, currentLaneSpawnPos, Quaternion.identity, boardOrigin);
+            lane.Initialize();
+
             currentLaneSpawnPos.y -= laneSpacing;
         }
     }
