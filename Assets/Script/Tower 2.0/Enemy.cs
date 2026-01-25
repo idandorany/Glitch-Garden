@@ -70,38 +70,40 @@ public class Enemy : MonoBehaviour
 
     private void FindNextTarget()
     {
-        GameObject defender = FindClosestWithTag("Defender");
+        Transform defender = CombatRegistry.Instance != null
+            ? CombatRegistry.Instance.GetClosestDefenderAhead(rowIndex, transform.position.x)
+            : null;
 
         if (defender != null)
         {
-            currentTarget = defender;
+            currentTarget = defender.gameObject;
             return;
         }
 
+        // Base (global) fallback
         GameObject playerBase = GameObject.FindGameObjectWithTag("Base");
         if (playerBase != null)
-        {
             currentTarget = playerBase;
-        }
     }
 
-    private GameObject FindClosestWithTag(string tag)
-    {
-        GameObject[] targets = GameObject.FindGameObjectsWithTag(tag);
-        GameObject closest = null;
-        float bestDist = float.MaxValue;
 
-        foreach (var t in targets)
-        {
-            float d = Mathf.Abs(t.transform.position.x - transform.position.x);
-            if (d < bestDist)
-            {
-                bestDist = d;
-                closest = t;
-            }
-        }
-        return closest;
-    }
+    // private GameObject FindClosestWithTag(string tag)
+    // {
+    //     GameObject[] targets = GameObject.FindGameObjectsWithTag(tag);
+    //     GameObject closest = null;
+    //     float bestDist = float.MaxValue;
+    //
+    //     foreach (var t in targets)
+    //     {
+    //         float d = Mathf.Abs(t.transform.position.x - transform.position.x);
+    //         if (d < bestDist)
+    //         {
+    //             bestDist = d;
+    //             closest = t;
+    //         }
+    //     }
+    //     return closest;
+    // }
 
     private void AttackTarget()
     {

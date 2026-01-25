@@ -11,7 +11,19 @@ public class UnitCombat : MonoBehaviour
 
     public void SetRow(int row)
     {
+        if (rowIndex != -1 && CombatRegistry.Instance != null)
+            CombatRegistry.Instance.UnregisterDefender(this, rowIndex);
+
         rowIndex = row;
+
+        if (CombatRegistry.Instance != null)
+            CombatRegistry.Instance.RegisterDefender(this, rowIndex);
+    }
+
+    private void OnDestroy()
+    {
+        if (rowIndex != -1 && CombatRegistry.Instance != null)
+            CombatRegistry.Instance.UnregisterDefender(this, rowIndex);
     }
 
     private void Update()

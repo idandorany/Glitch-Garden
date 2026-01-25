@@ -2,27 +2,26 @@ using UnityEngine;
 
 public class Lane : MonoBehaviour
 {
+    [Header("Lane")]
+    [SerializeField] private int rowIndex = 0;
+    public int RowIndex => rowIndex;
+
     [Header("References")]
     [SerializeField] private EnemySpawner spawner;
     [SerializeField] private Transform tilesRoot;
 
-    private TileCell[] tiles;
-    public TileCell[] Tiles => tiles;
+    private void Awake()
+    {
+        Initialize();
+    }
 
     public void Initialize()
     {
-        tiles = tilesRoot.GetComponentsInChildren<TileCell>(includeInactive: true);
+        if (spawner != null)
+            spawner.SetRow(rowIndex);
 
-        if (tiles == null || tiles.Length == 0)
-        {
-            Debug.LogError($"{name}: No TileCell found under TileRoot.");
-            return;
-        }
-
-        if (spawner == null)
-        {
-            Debug.LogError($"{name}: Spawner reference missing.");
-            return;
-        }
+        // Optional: sanity check tiles exist
+        if (tilesRoot == null)
+            Debug.LogWarning($"{name}: tilesRoot not assigned");
     }
 }
