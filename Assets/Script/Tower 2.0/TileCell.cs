@@ -7,6 +7,23 @@ public class TileCell : MonoBehaviour
 
     public Vector3 CenterWorld => transform.position;
 
+
+
+    //-----------------------
+
+        public Lane ParentLane { get; private set; }
+
+        public void SetLane(Lane lane)
+        {
+            ParentLane = lane;
+        }
+
+
+    //-----------------------
+
+
+
+
     public void Init(Vector2Int gridPos)
     {
         GridPos = gridPos;

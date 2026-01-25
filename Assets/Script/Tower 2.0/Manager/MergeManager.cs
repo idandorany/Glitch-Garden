@@ -5,11 +5,9 @@ public class MergeManager : MonoBehaviour
 {
     [SerializeField] private Camera cam;
     [SerializeField] private LayerMask tileLayer;
-
     [Header("Merge")]
     [SerializeField] private MergeDatabase mergeDatabase;
 
-    // Track what is on each tile (so we can merge/replace)
     private readonly Dictionary<TileCell, Transform> tileToUnit = new();
     private readonly Dictionary<TileCell, UnitData> tileToData = new();
 
@@ -22,17 +20,8 @@ public class MergeManager : MonoBehaviour
     {
         if (cam == null) cam = Camera.main;
 
-        if (mergeDatabase == null)
-        {
-            Debug.LogError("PlacementManager: MergeDatabase is missing!");
-            return false;
-        }
-
         if (!mergeDatabase.TryResolveByPrefab(unitPrefab, out UnitData incomingData))
-        {
-            Debug.LogError("PlacementManager: Could not resolve UnitData for prefab. Make sure this unit exists in MergeDatabase recipes.");
             return false;
-        }
 
         Vector3 world = cam.ScreenToWorldPoint(screenPosition);
         world.z = 0f;
@@ -43,39 +32,21 @@ public class MergeManager : MonoBehaviour
         TileCell tile = hit.GetComponent<TileCell>();
         if (tile == null) return false;
 
-        // If empty: normal place
         if (!tile.IsOccupied)
         {
             GameObject unit = Instantiate(unitPrefab, tile.CenterWorld, Quaternion.identity);
-            tile.TryOccupy(unit.transform);
 
+            Lane lane = tile.GetComponentInParent<Lane>();
+            UnitCombat combat = unit.GetComponent<UnitCombat>();
+            if (lane != null && combat != null)
+                combat.SetRow(lane.RowIndex);
+
+            tile.TryOccupy(unit.transform);
             tileToUnit[tile] = unit.transform;
             tileToData[tile] = incomingData;
             return true;
         }
 
-        // Occupied: attempt merge
-        if (!tileToData.TryGetValue(tile, out UnitData existingData) || existingData == null)
-        {
-            Debug.LogError("PlacementManager: Tile is occupied but has no UnitData tracked (dictionary missing).");
-            return false;
-        }
-
-        if (!mergeDatabase.TryGetMergeResult(existingData, incomingData, out UnitData outputData))
-            return false; // no recipe
-
-        // Merge success: replace unit
-        if (tileToUnit.TryGetValue(tile, out Transform existingUnitTf) && existingUnitTf != null)
-            Destroy(existingUnitTf.gameObject);
-
-        tile.Clear();
-
-        GameObject merged = Instantiate(outputData.prefab, tile.CenterWorld, Quaternion.identity);
-        tile.TryOccupy(merged.transform);
-
-        tileToUnit[tile] = merged.transform;
-        tileToData[tile] = outputData;
-
-        return true;
+        return false;
     }
 }

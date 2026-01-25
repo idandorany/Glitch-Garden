@@ -244,3 +244,4 @@ MonoBehaviour:
   attackRange: 1.5
   attackCooldown: 1
   damage: 1
+  hp: 5

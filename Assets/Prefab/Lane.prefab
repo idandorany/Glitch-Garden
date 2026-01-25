@@ -302,7 +302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b96ce48b3015da4a8b02740bbd1ee2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Lane
-  rowIndex: 1
+  rowIndex: 0
   spawner: {fileID: 342746665238078735}
   tilesRoot: {fileID: 4995944265965723886}
 --- !u!1 &9139793746497961666

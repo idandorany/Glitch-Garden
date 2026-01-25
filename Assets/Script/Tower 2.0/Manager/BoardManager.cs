@@ -22,7 +22,7 @@ public class BoardManager : MonoBehaviour
         for (int i = 0; i < laneCount; i++)
         {
             Lane lane = Instantiate(lanePrefab, currentLaneSpawnPos, Quaternion.identity, boardOrigin);
-            lane.Initialize();
+            //lane.Initialize();
 
             currentLaneSpawnPos.y -= laneSpacing;
         }

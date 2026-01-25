@@ -3,31 +3,27 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [Header("Lane")]
-    [SerializeField] private int rowIndex = 0; // set per lane in Inspector
-
-    [Header("Enemy Prefab")]
     [SerializeField] private Enemy enemyPrefab;
 
-    [Header("Runtime")]
-    [SerializeField] private List<Enemy> spawnedEnemies = new();
+    private int rowIndex;
 
-    public void SetRow(int row) => rowIndex = row;
+    public void SetRow(int row)
+    {
+        rowIndex = row;
+    }
 
     [ContextMenu("Spawn Enemy")]
+
     public Enemy SpawnEnemy()
     {
         if (enemyPrefab == null)
         {
-            Debug.LogError($"{name}: enemyPrefab missing");
+            Debug.LogError($"{name}: Enemy prefab missing");
             return null;
         }
 
         Enemy enemy = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
-
         enemy.SetRow(rowIndex);
-
-        spawnedEnemies.Add(enemy);
         return enemy;
     }
 }
