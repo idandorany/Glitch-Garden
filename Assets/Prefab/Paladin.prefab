@@ -102,6 +102,7 @@ GameObject:
   - component: {fileID: 5429544048731040674}
   - component: {fileID: 3478356715886554682}
   - component: {fileID: -1008975721728930845}
+  - component: {fileID: 533135435547341811}
   m_Layer: 6
   m_Name: Paladin
   m_TagString: Defender
@@ -123,6 +124,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3108534913912758396}
+  - {fileID: 7767436326529159926}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5429544048731040674
@@ -233,14 +235,59 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitCombat
   attackType: 0
-  rayDistance: 2
-  rayBoxSize: {x: 0.2, y: 0.8}
+  rayDistance: 1
+  rayBoxSize: {x: 1, y: 0.8}
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 0
-  sensorOrigin: {fileID: 0}
-  damage: 1
+    m_Bits: 128
+  sensorOrigin: {fileID: 7767436326529159926}
+  damage: 5
   attackCooldown: 1
   bulletPrefab: {fileID: 0}
   firePoint: {fileID: 0}
   hp: 15
+--- !u!114 &533135435547341811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3109526930121671296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf6e357ce3678a2449cec734e8f6f219, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageFlash
+  flashColor: {r: 1, g: 0, b: 0, a: 1}
+  flashTime: 0.08
+--- !u!1 &4476595406044482161
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7767436326529159926}
+  m_Layer: 6
+  m_Name: SensorOrigin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7767436326529159926
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4476595406044482161}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4346564096854704610}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

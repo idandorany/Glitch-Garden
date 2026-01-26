@@ -17,6 +17,13 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Transform sensorOrigin;
 
     private float timer;
+    private SpriteRenderer sr;
+
+    private void Awake()
+    {
+        sr = GetComponentInChildren<SpriteRenderer>();
+    }
+
 
     private void Update()
     {
@@ -64,8 +71,25 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int dmg)
     {
         hp -= dmg;
+        GetComponent<DamageFlash>()?.Flash();
+
         if (hp <= 0) Destroy(gameObject);
     }
+
+    private void FlashRed()
+    {
+        if (sr == null) return;
+        StopAllCoroutines();
+        StartCoroutine(FlashRoutine());
+    }
+
+    private System.Collections.IEnumerator FlashRoutine()
+    {
+        sr.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        sr.color = Color.white;
+    }
+
 
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()

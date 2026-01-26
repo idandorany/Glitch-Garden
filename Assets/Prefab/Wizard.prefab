@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2722944564684598918}
   - component: {fileID: 7553025932217266382}
   - component: {fileID: 7835996685930556914}
+  - component: {fileID: 1299039007970318267}
   m_Layer: 6
   m_Name: Wizard
   m_TagString: Defender
@@ -201,6 +202,20 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &1299039007970318267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1771463465841459968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf6e357ce3678a2449cec734e8f6f219, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageFlash
+  flashColor: {r: 1, g: 0, b: 0, a: 1}
+  flashTime: 0.08
 --- !u!1 &2594713286220759596
 GameObject:
   m_ObjectHideFlags: 0

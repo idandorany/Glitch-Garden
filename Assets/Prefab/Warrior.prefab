@@ -102,6 +102,7 @@ GameObject:
   - component: {fileID: 6105197964157561664}
   - component: {fileID: 245409126068593611}
   - component: {fileID: 9205626941961610975}
+  - component: {fileID: 7795976379293496308}
   m_Layer: 6
   m_Name: Warrior
   m_TagString: Defender
@@ -254,6 +255,20 @@ MonoBehaviour:
   bulletPrefab: {fileID: 0}
   firePoint: {fileID: 0}
   hp: 5
+--- !u!114 &7795976379293496308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4539887198496878483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf6e357ce3678a2449cec734e8f6f219, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageFlash
+  flashColor: {r: 1, g: 0, b: 0, a: 1}
+  flashTime: 0.08
 --- !u!1 &5683872270513898043
 GameObject:
   m_ObjectHideFlags: 0

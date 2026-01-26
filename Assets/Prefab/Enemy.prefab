@@ -102,6 +102,7 @@ GameObject:
   - component: {fileID: 4139472520086902527}
   - component: {fileID: -7601209375117541316}
   - component: {fileID: 9085674948743521744}
+  - component: {fileID: 5589992409979068205}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Enemy
@@ -243,7 +244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   speed: 1
-  hp: 5
+  hp: 10
   attackDamage: 1
   attackCooldown: 1
   rayDistance: 1
@@ -252,6 +253,20 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   sensorOrigin: {fileID: 2118292326508160509}
+--- !u!114 &5589992409979068205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1027989462392954556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf6e357ce3678a2449cec734e8f6f219, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageFlash
+  flashColor: {r: 1, g: 0, b: 0, a: 1}
+  flashTime: 0.08
 --- !u!1 &2543285010520164579
 GameObject:
   m_ObjectHideFlags: 0
