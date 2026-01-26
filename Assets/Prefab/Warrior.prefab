@@ -250,11 +250,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   sensorOrigin: {fileID: 593302111258449306}
-  damage: 1
+  damage: 3
   attackCooldown: 1
   bulletPrefab: {fileID: 0}
   firePoint: {fileID: 0}
-  hp: 5
+  hp: 15
 --- !u!114 &7795976379293496308
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -245,7 +245,7 @@ MonoBehaviour:
   attackCooldown: 1
   bulletPrefab: {fileID: 0}
   firePoint: {fileID: 0}
-  hp: 15
+  hp: 30
 --- !u!114 &533135435547341811
 MonoBehaviour:
   m_ObjectHideFlags: 0

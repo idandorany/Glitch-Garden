@@ -151,11 +151,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   sensorOrigin: {fileID: 4832756863520246721}
-  damage: 3
+  damage: 1
   attackCooldown: 1
   bulletPrefab: {fileID: -3526071524381789497, guid: c304c8639be48824d86ecdc7ba51dbe9, type: 3}
   firePoint: {fileID: 4832756863520246721}
-  hp: 3
+  hp: 6
 --- !u!61 &7835996685930556914
 BoxCollider2D:
   m_ObjectHideFlags: 0
