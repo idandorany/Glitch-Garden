@@ -6,29 +6,29 @@ public class Bullet : MonoBehaviour
     public float damage = 1f;
     public float lifeTime = 3f;
 
-    Transform target;
+    private Enemy target;
 
-    public void SetTarget(Transform t) => target = t;
+    public void SetTarget(Enemy e) => target = e;
 
-    void Start() => Destroy(gameObject, lifeTime);
+    private void Start() => Destroy(gameObject, lifeTime);
 
-    void Update()
+    private void Update()
     {
         if (target == null) { Destroy(gameObject); return; }
 
-        Vector3 dir = (target.position - transform.position).normalized;
+        Vector3 dir = (target.transform.position - transform.position).normalized;
         transform.position += dir * speed * Time.deltaTime;
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        // IMPORTANT: if collider is on a child, this still finds the parent health
-        if (!other.CompareTag("Enemy")) return;
+        Enemy e = other.GetComponentInParent<Enemy>();
+        if (e == null) return;
 
-        EnemyHealth hp = other.GetComponentInParent<EnemyHealth>();
-        if (hp != null)
-            hp.TakeDamage(damage);
+        // Only damage the specific target we were assigned
+        if (e != target) return;
 
+        target.TakeDamage(Mathf.RoundToInt(damage)); // your Enemy.TakeDamage takes int
         Destroy(gameObject);
     }
 }

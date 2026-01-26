@@ -2,100 +2,80 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [Header("Stats")]
-    [SerializeField] private int health = 3;
+    [Header("Move")]
     [SerializeField] private float speed = 1f;
-    [SerializeField] private float attackRange = 0.2f;
+
+    [Header("Combat")]
+    [SerializeField] private int hp = 3;
+    [SerializeField] private int attackDamage = 1;
     [SerializeField] private float attackCooldown = 1f;
 
-    [Header("Base")]
-    [SerializeField] private Transform enterBasePos;
+    [Header("Raycast (Detect Defenders)")]
+    [SerializeField] private float rayDistance = 0.8f;                 // short
+    [SerializeField] private Vector2 rayBoxSize = new Vector2(0.2f, 0.8f);
+    [SerializeField] private LayerMask defenderLayer;
+    [SerializeField] private Transform sensorOrigin;
 
-    private int rowIndex = -1;
-    private float lastAttack;
-    private Transform currentTarget;
-    private bool reachedBase;
-
-    public void SetRow(int row)
-    {
-        // if row changes, unregister from old row
-        if (CombatRegistry.Instance != null && rowIndex != -1)
-            CombatRegistry.Instance.UnregisterEnemy(this, rowIndex);
-
-        rowIndex = row;
-
-        // register now if registry exists
-        if (CombatRegistry.Instance != null)
-            CombatRegistry.Instance.RegisterEnemy(this, rowIndex);
-    }
-
-    private void OnEnable()
-    {
-        // handles the case where SetRow happened BEFORE registry existed
-        if (CombatRegistry.Instance != null && rowIndex != -1)
-            CombatRegistry.Instance.RegisterEnemy(this, rowIndex);
-    }
-    private void OnDisable()
-    {
-        if (CombatRegistry.Instance != null && rowIndex != -1)
-            CombatRegistry.Instance.UnregisterEnemy(this, rowIndex);
-    }
+    private float timer;
 
     private void Update()
     {
-        if (health <= 0 || reachedBase)
-            return;
+        if (hp <= 0) return;
 
-        if (currentTarget == null)
+        timer -= Time.deltaTime;
+
+        // Scan RIGHT for defenders (enemies move Left -> Right)
+        UnitCombat defender = ScanForDefender();
+
+        if (defender != null)
         {
-            currentTarget = CombatRegistry.Instance.GetClosestDefenderAhead(
-                rowIndex, transform.position.x
-            );
-
-            if (currentTarget == null)
+            // Engage: stop moving and attack on cooldown
+            if (timer <= 0f)
             {
-                MoveForward();
-                return;
+                Debug.Log($"{name} attacks {defender.name}");
+                defender.TakeDamage(attackDamage);
+                timer = attackCooldown;
             }
+            return;
         }
 
-        float dx = currentTarget.position.x - transform.position.x;
-
-        if (dx <= attackRange)
-            Attack();
-        else
-            MoveForward();
-    }
-
-    private void MoveForward()
-    {
+        // No defender ahead -> move forward
         transform.Translate(Vector2.right * speed * Time.deltaTime);
     }
 
-    private void Attack()
+    private UnitCombat ScanForDefender()
     {
-        if (Time.time - lastAttack < attackCooldown)
-            return;
+        if (sensorOrigin == null) sensorOrigin = transform;
 
-        lastAttack = Time.time;
+        RaycastHit2D hit = Physics2D.BoxCast(
+            sensorOrigin.position,
+            rayBoxSize,
+            0f,
+            Vector2.right,
+            rayDistance,
+            defenderLayer
+        );
 
-        var combat = currentTarget.GetComponent<UnitCombat>();
-        if (combat != null)
-            combat.TakeDamage(1);
+        if (!hit) return null;
+
+        return hit.collider.GetComponentInParent<UnitCombat>();
     }
 
     public void TakeDamage(int dmg)
     {
-        health -= dmg;
-        Debug.Log($"{name} took {dmg} dmg (HP={health})");
-
-        if (health <= 0)
-            Die();
+        hp -= dmg;
+        if (hp <= 0) Destroy(gameObject);
     }
 
-    private void Die()
+#if UNITY_EDITOR
+    private void OnDrawGizmosSelected()
     {
-        Debug.Log($"{name} died");
-        Destroy(gameObject, 0.5f);
+        Transform o = sensorOrigin != null ? sensorOrigin : transform;
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube(
+            o.position + Vector3.right * rayDistance * 0.5f,
+            new Vector3(rayBoxSize.x, rayBoxSize.y, 0f)
+        );
     }
+#endif
 }

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2722944564684598918}
   - component: {fileID: 7553025932217266382}
   - component: {fileID: 7835996685930556914}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wizard
   m_TagString: Defender
   m_Icon: {fileID: 0}
@@ -34,6 +34,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8984931765164469413}
+  - {fileID: 4832756863520246721}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5290371359268224662
@@ -82,7 +83,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 50
+  m_SortingOrder: 6
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 1, g: 0.99417865, b: 0, a: 1}
   m_FlipX: 0
@@ -142,9 +143,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765f52f880c5c94439ba045fb12c8ec6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitCombat
-  attackRange: -3
-  attackCooldown: 1
+  attackType: 1
+  rayDistance: 7
+  rayBoxSize: {x: 7, y: 0.8}
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  sensorOrigin: {fileID: 4832756863520246721}
   damage: 3
+  attackCooldown: 1
+  bulletPrefab: {fileID: -3526071524381789497, guid: c304c8639be48824d86ecdc7ba51dbe9, type: 3}
+  firePoint: {fileID: 4832756863520246721}
   hp: 3
 --- !u!61 &7835996685930556914
 BoxCollider2D:
@@ -176,7 +185,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -192,6 +201,37 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!1 &2594713286220759596
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4832756863520246721}
+  m_Layer: 0
+  m_Name: SensorOrigin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4832756863520246721
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2594713286220759596}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.02, y: 0.06, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3838721011827553075}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4926246088156386425
 GameObject:
   m_ObjectHideFlags: 0

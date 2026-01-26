@@ -40,6 +40,7 @@ public class CombatRegistry : MonoBehaviour
         if (!IsValidRow(row)) return;
         if (!defendersByRow[row].Contains(defender))
             defendersByRow[row].Add(defender);
+        Debug.Log($"[Registry] RegisterDefender {defender.name} row={row}");
     }
 
     public void UnregisterDefender(UnitCombat defender, int row)
@@ -55,6 +56,8 @@ public class CombatRegistry : MonoBehaviour
         if (!IsValidRow(row)) return;
         if (!enemiesByRow[row].Contains(enemy))
             enemiesByRow[row].Add(enemy);
+        Debug.Log($"[Registry] RegisterEnemy {enemy.name} row={row}");
+
     }
 
     public void UnregisterEnemy(Enemy enemy, int row)

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5429544048731040674}
   - component: {fileID: 3478356715886554682}
   - component: {fileID: -1008975721728930845}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Paladin
   m_TagString: Defender
   m_Icon: {fileID: 0}
@@ -144,3 +144,4 @@ MonoBehaviour:
   attackRange: 1.5
   attackCooldown: 1
   damage: 1
+  hp: 1

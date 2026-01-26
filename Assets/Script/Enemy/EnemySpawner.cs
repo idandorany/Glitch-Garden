@@ -23,7 +23,7 @@ public class EnemySpawner : MonoBehaviour
         }
 
         Enemy enemy = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
-        enemy.SetRow(rowIndex);
+      //  enemy.SetRow(rowIndex);
         return enemy;
     }
 }

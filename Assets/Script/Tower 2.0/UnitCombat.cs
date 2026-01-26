@@ -2,64 +2,105 @@ using UnityEngine;
 
 public class UnitCombat : MonoBehaviour
 {
-    [SerializeField] private float attackRange = 1.5f;
-    [SerializeField] private float attackCooldown = 1f;
+    public enum AttackType { Melee, Ranged }
+
+    [Header("Attack Type")]
+    [SerializeField] private AttackType attackType = AttackType.Melee;
+
+    [Header("Raycast Settings")]
+    [SerializeField] private float rayDistance = 2f;                 // melee small, ranged big
+    [SerializeField] private Vector2 rayBoxSize = new Vector2(0.2f, 0.8f);
+    [SerializeField] private LayerMask enemyLayer;
+    [SerializeField] private Transform sensorOrigin;
+
+    [Header("Combat")]
     [SerializeField] private int damage = 1;
-    [SerializeField] private int hp = 1;
+    [SerializeField] private float attackCooldown = 1f;
 
+    [Header("Ranged")]
+    [SerializeField] private Bullet bulletPrefab;
+    [SerializeField] private Transform firePoint;
 
-    private int rowIndex;
+    [Header("Health")]
+    [SerializeField] private int hp = 3;
+
     private float timer;
 
-    public void SetRow(int row)
-    {
-        rowIndex = row;
-        CombatRegistry.Instance.RegisterDefender(this, rowIndex);
-        Debug.Log(rowIndex);
-        
-    }
-
-    private void OnDestroy()
-    {
-        if (CombatRegistry.Instance != null)
-            CombatRegistry.Instance.UnregisterDefender(this, rowIndex);
-    }
+    // -------------------------------------------------
 
     private void Update()
     {
         timer -= Time.deltaTime;
         if (timer > 0f) return;
 
-        Enemy target = CombatRegistry.Instance.GetClosestEnemyInRow(
-            rowIndex, transform.position.x
-        );
+        Enemy target = ScanForEnemy();
+        if (target == null) return;
 
-
-        if (target == null)
-            return;
-
-        if (Mathf.Abs(target.transform.position.x - transform.position.x) <= attackRange)
+        if (attackType == AttackType.Melee)
         {
             target.TakeDamage(damage);
-            Debug.Log("Defender Attacks!");
-            timer = attackCooldown;
+            Debug.Log($"{name} MELEE HIT");
         }
+        else
+        {
+            if (bulletPrefab == null) return;
+
+            Transform spawn = firePoint != null ? firePoint : transform;
+            Bullet b = Instantiate(bulletPrefab, spawn.position, Quaternion.identity);
+            b.damage = damage;
+            b.SetTarget(target); // Enemy
+            Debug.Log($"{name} SHOOTS");
+        }
+
+        timer = attackCooldown;
     }
 
+    // -------------------------------------------------
 
+    private Enemy ScanForEnemy()
+    {
+        if (sensorOrigin == null)
+            sensorOrigin = transform;
+
+        RaycastHit2D hit = Physics2D.BoxCast(
+            sensorOrigin.position,
+            rayBoxSize,
+            0f,
+            Vector2.left,      
+            rayDistance,
+            enemyLayer
+        );
+
+        if (!hit) return null;
+
+        return hit.collider.GetComponentInParent<Enemy>();
+    }
+
+    // -------------------------------------------------
 
     public void TakeDamage(int dmg)
     {
         hp -= dmg;
-        Debug.Log($"{name} took {dmg} dmg (HP={hp})");
-
         if (hp <= 0)
-            Die();
+            Destroy(gameObject);
     }
 
-    private void Die()
+    // -------------------------------------------------
+    // Dummy function so MergeManager doesn't break
+    public void SetRow(int row) { }
+
+    // -------------------------------------------------
+
+#if UNITY_EDITOR
+    private void OnDrawGizmosSelected()
     {
-        Debug.Log($"{name} died");
-        Destroy(gameObject, 0.5f);
+        if (sensorOrigin == null) return;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(
+            sensorOrigin.position + Vector3.left * rayDistance * 0.5f,
+            new Vector3(rayBoxSize.x, rayBoxSize.y, 0)
+        );
     }
+#endif
 }

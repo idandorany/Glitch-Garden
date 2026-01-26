@@ -65,7 +65,7 @@ public class Tower : MonoBehaviour
         if (bulletPrefab == null || firePoint == null) return;
 
         GameObject b = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
-        b.GetComponent<Bullet>()?.SetTarget(target);
+      //  b.GetComponent<Bullet>()?.SetTarget(target);
     }
 
     void OnDrawGizmosSelected()
