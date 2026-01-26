@@ -38,7 +38,7 @@ public class TileCell : MonoBehaviour
         unit.position = transform.position;
         return true;
     }
-
+    
     public void Clear()
     {
         IsOccupied = false;

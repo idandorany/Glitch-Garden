@@ -11,14 +11,34 @@ public class Enemy : MonoBehaviour
     [Header("Base")]
     [SerializeField] private Transform enterBasePos;
 
-    private int rowIndex;
+    private int rowIndex = -1;
     private float lastAttack;
     private Transform currentTarget;
     private bool reachedBase;
 
     public void SetRow(int row)
     {
+        // if row changes, unregister from old row
+        if (CombatRegistry.Instance != null && rowIndex != -1)
+            CombatRegistry.Instance.UnregisterEnemy(this, rowIndex);
+
         rowIndex = row;
+
+        // register now if registry exists
+        if (CombatRegistry.Instance != null)
+            CombatRegistry.Instance.RegisterEnemy(this, rowIndex);
+    }
+
+    private void OnEnable()
+    {
+        // handles the case where SetRow happened BEFORE registry existed
+        if (CombatRegistry.Instance != null && rowIndex != -1)
+            CombatRegistry.Instance.RegisterEnemy(this, rowIndex);
+    }
+    private void OnDisable()
+    {
+        if (CombatRegistry.Instance != null && rowIndex != -1)
+            CombatRegistry.Instance.UnregisterEnemy(this, rowIndex);
     }
 
     private void Update()

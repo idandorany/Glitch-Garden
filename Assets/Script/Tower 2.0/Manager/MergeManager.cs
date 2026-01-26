@@ -5,9 +5,11 @@ public class MergeManager : MonoBehaviour
 {
     [SerializeField] private Camera cam;
     [SerializeField] private LayerMask tileLayer;
+
     [Header("Merge")]
     [SerializeField] private MergeDatabase mergeDatabase;
 
+    // Track what is on each tile (so we can merge/replace)
     private readonly Dictionary<TileCell, Transform> tileToUnit = new();
     private readonly Dictionary<TileCell, UnitData> tileToData = new();
 
@@ -20,8 +22,17 @@ public class MergeManager : MonoBehaviour
     {
         if (cam == null) cam = Camera.main;
 
-        if (!mergeDatabase.TryResolveByPrefab(unitPrefab, out UnitData incomingData))
+        if (mergeDatabase == null)
+        {
+            Debug.LogError("MergeManager: mergeDatabase missing");
             return false;
+        }
+
+        if (!mergeDatabase.TryResolveByPrefab(unitPrefab, out UnitData incomingData))
+        {
+            Debug.LogError("MergeManager: Could not resolve UnitData for prefab (missing in MergeDatabase)");
+            return false;
+        }
 
         Vector3 world = cam.ScreenToWorldPoint(screenPosition);
         world.z = 0f;
@@ -32,21 +43,67 @@ public class MergeManager : MonoBehaviour
         TileCell tile = hit.GetComponent<TileCell>();
         if (tile == null) return false;
 
+        // If our dictionaries say it's occupied but the object was destroyed, clean it up
+        if (tileToUnit.TryGetValue(tile, out Transform existingTf) && existingTf == null)
+        {
+            tileToUnit.Remove(tile);
+            tileToData.Remove(tile);
+            tile.Clear(); // safe even if your TileCell auto-frees
+        }
+
+        // -------------------------
+        // EMPTY: normal placement
+        // -------------------------
         if (!tile.IsOccupied)
         {
             GameObject unit = Instantiate(unitPrefab, tile.CenterWorld, Quaternion.identity);
 
+            // Optional: lane row assignment (only if UnitCombat exists)
             Lane lane = tile.GetComponentInParent<Lane>();
-            UnitCombat combat = unit.GetComponent<UnitCombat>();
-            if (lane != null && combat != null)
+            if (lane != null && unit.TryGetComponent<UnitCombat>(out var combat))
+            {
+                // If your UnitCombat temporary version DOESN'T have SetRow, delete next line
                 combat.SetRow(lane.RowIndex);
+            }
 
-            tile.TryOccupy(unit.transform);
+            tile.TryOccupy(unit.transform); //  only once
             tileToUnit[tile] = unit.transform;
             tileToData[tile] = incomingData;
             return true;
         }
 
-        return false;
+        // -------------------------
+        // OCCUPIED: attempt merge
+        // -------------------------
+        if (!tileToData.TryGetValue(tile, out UnitData existingData) || existingData == null)
+        {
+            Debug.LogWarning("MergeManager: Tile is occupied but has no UnitData tracked (dictionary missing).");
+            return false;
+        }
+
+        if (!mergeDatabase.TryGetMergeResult(existingData, incomingData, out UnitData outputData))
+            return false; // no recipe
+
+        // Merge success: destroy old, place new
+        if (tileToUnit.TryGetValue(tile, out Transform oldTf) && oldTf != null)
+            Destroy(oldTf.gameObject);
+
+        tile.Clear();
+
+        GameObject merged = Instantiate(outputData.prefab, tile.CenterWorld, Quaternion.identity);
+
+        Lane mergedLane = tile.GetComponentInParent<Lane>();
+        if (mergedLane != null && merged.TryGetComponent<UnitCombat>(out var mergedCombat))
+        {
+            // If your UnitCombat temporary version DOESN'T have SetRow, delete next line
+            mergedCombat.SetRow(mergedLane.RowIndex);
+        }
+
+        tile.TryOccupy(merged.transform);
+
+        tileToUnit[tile] = merged.transform;
+        tileToData[tile] = outputData;
+
+        return true;
     }
 }
